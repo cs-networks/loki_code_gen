@@ -1,0 +1,172 @@
+{
+    "meta_data": [
+        {
+            "template": "./templates/fsm_model.mustache",
+            "output": "./output/fsm_model_matter.py"
+        },
+        {
+            "template": "./templates/fsm_swagger_spec_path.mustache",
+            "output": "./output/fsm_swagger_spec_path_matter.json"
+        },
+        {
+            "template": "./templates/fsm_transition_controller.mustache",
+            "output": "./output/fsm_transition_controller.py"
+        }        
+    ],
+    "data": {
+        "class_name": "Matter",
+        "path_name": "matter",
+        "object_name": "lump",
+        "instance_name": "machine",
+        "ignore_invalid_triggers": true,
+        "auto_transitions": false,
+        "object_id": "matter_id",
+        "prameter_id": "matterId",
+        "model_name": "matter_model",
+        "fsm_class_name": "matter_fsm",
+        "before_state_change":[
+            {
+                "callback_name": "cb_before_state_change",
+                "last": true
+            }
+        ],
+        "after_state_change": [
+            {
+                "callback_name": "cd_after_state_change",
+                "last": true
+            }
+        ],
+        "states": [
+            {
+                "name": "solid",
+                "initial": true,
+                "last": false
+            },
+            {
+                "name": "liquid",
+                "initial": false,
+                "last": false
+            },
+            {
+                "name": "gas",
+                "initial": false,
+                "last": false
+            },
+            {
+                "name": "plasma",
+                "initial": false,
+                "on_enter": [
+                    {
+                        "callback_name": "cb_on_enter_plasma",
+                        "last": true
+                    }
+                ],
+                "on_exit": [
+                    {
+                        "callback_name": "cb_on_exit_plasma",
+                        "last": true
+                    }
+                ],
+                "last": true
+            }
+        ],
+        "triggers": [
+            {
+                "name": "melt",
+                "source": "solid",
+                "dest": "liquid",
+                "conditions": [
+                    {
+                        "callback_name": "test1",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "freez",
+                "source": "liquid",
+                "dest": "solid",
+                "conditions": [
+                    {
+                        "callback_name": "test2",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "evaporate",
+                "source": "liquid",
+                "dest": "gas",
+                "conditions": [
+                    {
+                        "callback_name": "test3",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "condensate",
+                "source": "gas",
+                "dest": "liquid",
+                "conditions": [
+                    {
+                        "callback_name": "test4",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "sublimate",
+                "source": "solid",
+                "dest": "gas",
+                "conditions": [
+                    {
+                        "callback_name": "test5",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "deposit",
+                "source": "gas",
+                "dest": "solid",
+                "conditions": [
+                    {
+                        "callback_name": "test6",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "ionize",
+                "source": "gas",
+                "dest": "plasma",
+                "conditions": [
+                    {
+                        "callback_name": "test7",
+                        "last": true
+                    }
+                ],
+                "last": false
+            },
+            {
+                "name": "deionize",
+                "source": "plasma",
+                "dest": "gas",
+                "conditions": [
+                    {
+                        "callback_name": "test8",
+                        "last": true
+                    }
+                ],
+                "last": true
+            }
+        ]
+    }
+}

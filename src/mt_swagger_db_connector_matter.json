@@ -1,0 +1,57 @@
+{
+ "meta_data": [
+    { "template": "./templates/db_connector.mustache",
+      "output": "./output/matter_model.py"
+    }
+ ],
+ "data": {
+    "import_path_database": "swagger_server.database",
+    "import_object_database": "db",
+    "import_path_models": "swagger_server.models.matter",
+    "import_object_modles": [
+      {"model": "Matter"}
+    ],
+    "import_path_database_models": "swagger_server.database.models",
+    "import_database_modles": [
+      {"model": "matter_model"}
+    ],
+
+    "this_model_class_name": "Matter",
+    "class_name": "matter_model",
+    "table_name": "matter",
+    "path_name": "matter",
+    "tag": "matter",
+    "fields": [
+        { "name": "id",
+          "type": "String",
+          "type_dataclasses": "String",
+          "type_swagger": "String",
+          "type_sqlalchemy": "String",
+          "number": false,
+          "key": true,
+          "first": true,
+          "last": false
+        },
+        { "name": "state",
+          "type": "String",
+          "type_dataclasses": "String",
+          "type_swagger": "String",
+          "type_sqlalchemy": "String",
+          "number": false,
+          "key": false,
+          "first": false,
+          "last": false
+        },
+        { "name": "temperatur",
+          "type": "Float",
+          "type_dataclasses": "Float",
+          "type_swagger": "Float",
+          "type_sqlalchemy": "Float",
+          "number": true,
+          "key": false,
+          "first": false,
+          "last": true
+        }
+    ]
+  }
+}

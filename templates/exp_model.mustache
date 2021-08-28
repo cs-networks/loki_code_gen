@@ -1,0 +1,85 @@
+"""Summary
+"""
+import dataclasses
+from dataclasses import dataclass, field
+
+from typing import Tuple
+from marshmallow import validate
+from dataclasses_json import dataclass_json
+
+from typing import Optional
+
+
+@dataclass_json
+@dataclass(frozen=True)
+class {{class_name}}():
+    """Summary
+    """
+
+    # pylint: disable=E1136
+    # Bug in PyLint with Optional attributes
+
+    # pylint: disable=too-many-instance-attributes
+    # Class has more than 7 needed attributes
+
+    {{#fields}}
+    {{name}}: {{#optional}}Optional[{{/optional}}{{type_dataclasses}}{{#optional}}]{{/optional}} = field({{#metadata}}metadata={ {{#required}}"required": {{required}}, {{/required}}{{#allow_none}}"allow_none": {{allow_none}}, {{/allow_none}}{{#description}}"description": {{description}}, {{/description}}{{#key}}"key": {{key}}, {{/key}}{{#validate}}"validate": {{validate}}, {{/validate}}}{{/metadata}})
+    {{/fields}}
+
+    def gen_update_stmt(self, table_name: str) -> Tuple[str, list]:
+        statement: str = f'UPDATE {table_name} SET'
+        where_clause: str = 'WHERE'
+        values: list = []
+        where_values: list = []
+
+        for my_field in dataclasses.fields(self):
+            key_field = my_field.metadata.get('key', None)
+            if not key_field:
+                name = my_field.name
+                statement = f'{statement} {name} = ?,'
+                values.append(getattr(self, name))
+            else:
+                name = my_field.name
+                where_clause = f'{where_clause} {name} = ? AND'
+                where_values.append(getattr(self, name))
+
+        statement = statement[:-1]
+        where_clause = where_clause[:-3]
+        statement = f'{statement} {where_clause};'
+        values.extend(where_values)
+
+        return statement, values
+
+    def gen_insert_stmt(self, table_name: str) -> Tuple[str, list]:
+        statement: str = f'INSERT INTO {table_name}('
+        values_clause: str = 'VALUES('
+        values: list = []
+
+        for my_field in dataclasses.fields(self):
+            name = my_field.name
+            statement = f'{statement} {name},'
+            values_clause = f'{values_clause} ?,'
+            values.append(getattr(self, name))
+
+        statement = statement[:-1]
+        values_clause = values_clause[:-1]
+        statement = f'{statement}) {values_clause});'
+
+        return statement, values
+
+    def gen_delete_stmt(self, table_name: str) -> Tuple[str, list]:
+        statement: str = f'DELETE FROM {table_name}'
+        where_clause: str = 'WHERE'
+        where_values: list = []
+
+        for my_field in dataclasses.fields(self):
+            key_field = my_field.metadata.get('key', None)
+            if key_field:
+                name = my_field.name
+                where_clause = f'{where_clause} {name} = ? AND'
+                where_values.append(getattr(self, name))
+
+        where_clause = where_clause[:-3]
+        statement = f'{statement} {where_clause};'
+
+        return statement, where_values

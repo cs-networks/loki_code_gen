@@ -1,0 +1,44 @@
+from {{import_path_database}} import {{import_object_database}}
+{{#import_object_modles}}
+from {{import_path_models}} import {{model}}
+{{/import_object_modles}}
+
+
+class {{class_name}}({{import_object_database}}.Model):
+    __tablename__ = "{{table_name}}"
+    # Database fields
+    {{#fields}}
+    {{name}} = {{import_object_database}}.Column({{import_object_database}}.{{type_sqlalchemy}}{{#key}}, primary_key=True{{/key}})
+    {{/fields}}
+
+    def __getitem__(self, field):
+        return self.__dict__[field]
+
+    def to_obj(self) -> {{this_model_class_name}}:
+        return {{this_model_class_name}}{{#fields}}{{#first}}({{name}}=self.{{name}},{{/first}}{{^first}}                             {{name}}=self.{{name}}{{^last}},{{/last}}{{#last}}){{/last}}{{/first}}
+        {{/fields}}
+
+    def copy(self, other):
+        {{#fields}}
+        other.{{name}} = self.{{name}}
+        {{/fields}}
+
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(other, {{class_name}}):
+            return {{#fields}}{{#first}}(self.{{name}} == other.{{name}}  # noqa: W503{{/first}}{{^first}}                    and self.{{name}} == other.{{name}}{{#last}}){{/last}}  # noqa: W503{{/first}}
+            {{/fields}}
+        return False
+
+    @classmethod
+    def get_all(cls):
+        objects = cls.query.first()
+        return objects
+
+    @classmethod
+    def get_all_key_dict(cls):
+        orders_entries = {}
+        model_objects = cls.query.all()
+        for item in model_objects:
+            orders_entries[f'{{#fields}}{{#key}}{item["{{name}}"]}-{{/key}}{{/fields}}'] = item
+        return orders_entries

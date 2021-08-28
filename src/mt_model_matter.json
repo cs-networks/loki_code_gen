@@ -1,0 +1,64 @@
+{
+ "meta_data": [
+    { "template": "./templates/exp_model.mustache",
+      "output": "./output/model_matter.py"
+    }
+ ],
+ "data": {
+    "class_name": "matter",
+    "fields": [
+        { "name": "id",
+          "type": "str",
+          "type_dataclasses": "str",
+          "type_swagger": "str",
+          "type_sqlalchemy": "str",
+          "optional": false,
+          "first": true,
+          "last": false,
+          "metadata": {
+            "required": true,
+            "allow_none": false,
+            "key": true}
+        },
+        { "name": "state",
+          "type": "str",
+          "type_dataclasses": "str",
+          "type_swagger": "str",
+          "type_sqlalchemy": "str",
+          "optional": false,
+          "first": false,
+          "last": false,
+          "metadata": {
+            "required": true,
+            "allow_none": false
+          }
+        },
+        { "name": "pressure",
+          "type": "float",
+          "type_dataclasses": "float",
+          "type_swagger": "float",
+          "type_sqlalchemy": "float",
+          "optional": false,
+          "first": false,
+          "last": false,
+          "metadata": {
+            "required": true,
+            "allow_none": false
+            }
+        },        
+        { "name": "temperatur",
+          "type": "float",
+          "type_dataclasses": "float",
+          "type_swagger": "float",
+          "type_sqlalchemy": "float",
+          "optional": false,
+          "first": false,
+          "last": true,
+          "metadata": {
+            "required": true,
+            "allow_none": false
+            }
+        }
+    ]
+  }
+}

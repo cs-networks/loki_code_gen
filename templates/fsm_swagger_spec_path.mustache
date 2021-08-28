@@ -1,0 +1,111 @@
+{
+  "/{{path_name}}": {
+    "post": {
+      "summary": "Add a new State Machine to the pool",
+      "description": "",
+      "operationId": "add{{class_name}}",
+        "tags": [
+          "FSM"
+        ],      
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../schemas/matter_schema.json#/components/schemas/MatterProperties"
+            }
+          }
+        }
+      },      
+      "responses": {
+            "200": {
+                "description": "{{class_name}} object inserted"
+            },
+          "405": {
+              "description": "Invalid input"
+          }
+      }
+    }
+  },
+  "/{{path_name}}/{matterId}": {
+       "get": {
+        "summary": "Info for a specific {{class_name}} object",
+        "operationId": "getById",
+        "tags": [
+          "FSM"
+        ],
+        "parameters": [
+          {
+            "name": "matterId",
+            "in": "path",
+            "required": true,
+            "description": "The id of the {{class_name}} object to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/matter_schema.json#/components/schemas/MatterResponse"
+                }
+              }
+            }
+          },
+            "400": {
+                "description": "Invalid ID supplied"
+            },
+            "404": {
+                "description": "{{class_name}} object not found"
+            }
+        }
+    }
+  },
+{{# triggers }}
+
+    "/{{path_name}}/{matterId}/{{name}}": {
+        "get": {
+        "tags": [
+          "transitions"
+        ],
+        "summary": "Trigger transition {{name}}",
+        "description": "Advances the FSM",
+        "operationId": "do_{{name}}",
+        "parameters": [
+          {
+            "name": "matterId",
+            "in": "path",
+            "required": true,
+            "description": "The id of the {{class_name}} object to retrieve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../schemas/matter_schema.json#/components/schemas/MatterResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid transition supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Transition not found",
+            "content": {}
+          }
+        }
+      }
+    }{{^last}}, {{/last}} 
+{{/ triggers }}
+}
